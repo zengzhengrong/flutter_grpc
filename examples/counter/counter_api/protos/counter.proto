@@ -1,0 +1,22 @@
+syntax = "proto3";
+package counter;
+
+// The counter service definition.
+service Counter {
+  // Sends a Counter
+  rpc getCounter (CounterRequest) returns (CounterResponse) {}
+}
+
+message CounterRequest {
+  int32 number = 1;
+  int32 breadth = 2;
+  Operator type = 3;
+  enum Operator {
+    Increment = 0;
+    Decrement = 1;
+  }
+}
+
+message CounterResponse {
+  int32 number = 1;
+}

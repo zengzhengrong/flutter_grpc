@@ -1,0 +1,11 @@
+name: counter_api
+description: A package of counter flutter app
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+
+dependencies:
+  grpc: ^2.1.3
+  protobuf: ^1.0.1  
