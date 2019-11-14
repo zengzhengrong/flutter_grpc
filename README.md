@@ -11,7 +11,7 @@ Flutter with grpc tutorial ~!
 ## Docker deploy micro-service(grpc)
 
 If installed docker on your machine , it's very easy to deploy  
-Change directory to example/<projectname>/*_api by counter example:
+Change directory to example/< projectname >/*_api by counter example:
 ```
 cd examples/counter/counter_api
 ```
