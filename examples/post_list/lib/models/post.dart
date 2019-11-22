@@ -15,7 +15,7 @@ class Post extends Equatable {
   Post({this.id, this.category, this.title, this.body, this.created,
       this.updated});
 
-  factory Post.fromJson(Map<String, dynamic> json) {
+  factory Post.fromJson(Map<String,dynamic> json) {
     return Post(
       id: json['id']?? 0 ,
       category: json['category']?? 'null',
