@@ -1,7 +1,6 @@
 import 'dart:convert' show json;
 import 'dart:io';
 import 'package:equatable/equatable.dart';
-import 'package:path/path.dart' as path;
 import 'data.dart' show jsonString;
 
 class Post extends Equatable {

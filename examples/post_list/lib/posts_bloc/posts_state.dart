@@ -12,17 +12,16 @@ class InitialPostsState extends PostsState {}
 
 class PostsError extends PostsState {}
 
-class PostsLoading extends PostsState {}
-
 class PostsLoaded extends PostsState {
   final List<Post> posts;
   final bool hasReachedMax;
+  final int page;
   final int pages;
   final int perPage;
   final int total;
 
   const PostsLoaded(
-      {this.posts, this.hasReachedMax, this.pages, this.perPage, this.total});
+      {this.posts, this.hasReachedMax,this.page, this.pages, this.perPage, this.total});
 
   PostsLoaded copyWith({
     List<Post> posts,
@@ -35,9 +34,9 @@ class PostsLoaded extends PostsState {
   }
 
   @override
-  List<Object> get props => [posts, hasReachedMax];
+  List<Object> get props => [posts, hasReachedMax,page,pages,perPage,total];
 
   @override
   String toString() =>
-      'PostLoaded { posts: ${posts.length}, hasReachedMax: $hasReachedMax }';
+      'PostLoaded { posts: ${posts.length},currrent_page: $page,total_pages $pages hasReachedMax: $hasReachedMax }';
 }

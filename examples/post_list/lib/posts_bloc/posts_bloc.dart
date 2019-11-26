@@ -2,45 +2,40 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:post_list/models/models.dart';
 import 'package:posts_api/posts_api.dart';
+import 'package:rxdart/rxdart.dart';
 import './bloc.dart';
 
 class PostsBloc extends Bloc<PostsEvent, PostsState> {
   @override
   PostsState get initialState => InitialPostsState();
+  @override
+  Stream<PostsState> transformEvents(
+    Stream<PostsEvent> events,
+    Stream<PostsState> Function(PostsEvent event) next,
+  ) {
+    return super.transformEvents(
+      (events as Observable<PostsEvent>).debounceTime(
+        Duration(milliseconds: 500),
+      ),
+      next,
+    );
+  }
 
   @override
   Stream<PostsState> mapEventToState(
     PostsEvent event,
   ) async* {
     final currentState = state;
-    // print(currentState);
-    // if (currentState is InitialPostsState) {
-    //   try {
-    //     final response = await PostClientApi().getposts();
-    //     final List<Post> posts = List<Post>.from(response.items
-    //         .map((item) => tomap(item))
-    //         .map((mapitem) => Post.fromJson(mapitem)));
-    //     yield PostsLoaded(
-    //         posts: posts,
-    //         pages: response.pages,
-    //         perPage: response.perPage,
-    //         total: response.total,
-    //         hasReachedMax: response.items.isEmpty ? true : false);
-    //   } catch (e) {
-    //     print('getpost init error:$e');
-    //     yield PostsError();
-    //   }
-    // }
     if (event is GetPostsEvent && !_hasReachedMax(currentState)) {
       if (currentState is InitialPostsState) {
         try {
-          yield PostsLoading();
           final response = await PostClientApi().getposts();
           final List<Post> posts = List<Post>.from(response.items
               .map((item) => tomap(item))
               .map((mapitem) => Post.fromJson(mapitem)));
           yield PostsLoaded(
               posts: posts,
+              page: response.page,
               pages: response.pages,
               perPage: response.perPage,
               total: response.total,
@@ -53,36 +48,44 @@ class PostsBloc extends Bloc<PostsEvent, PostsState> {
       }
       if (currentState is PostsLoaded) {
         try {
-          final response = await PostClientApi().getposts(page: currentState.pages + 1);
+          print('当前页：${currentState.page}');
+          final response =
+              await PostClientApi().getposts(page: currentState.page + 1);
           final List<Post> posts = List<Post>.from(response.items
               .map((item) => tomap(item))
               .map((mapitem) => Post.fromJson(mapitem)));
-          // final List<Map<String, dynamic>> posts = response.items.map((item) => tomap(item)).toList();
-          // List<Post> pp = [];
-          // for (Map<String, dynamic> post in posts){
-          //   // print(post);
-          //   final p = Post.fromJson(post);
-          //   // print(p.runtimeType);
-          //   pp.add(p);
-          //   print(pp);
-          // }
-          // .map((mapitem) => Post.fromJson(mapitem));
-          // print(posts.runtimeType);
-          // print(posts);
-          // print(response);
 
           yield posts.isEmpty
               ? currentState.copyWith(hasReachedMax: true)
               : PostsLoaded(
                   posts: currentState.posts + posts,
+                  page: response.page,
                   pages: response.pages,
                   perPage: response.perPage,
                   total: response.total,
-                  hasReachedMax: response.items.isEmpty ? true : false);
+                  hasReachedMax: false);
         } catch (e) {
           print('getpost error:$e');
           yield PostsError();
         }
+      }
+    }
+    if (event is RefreshPosts) {
+      try {
+        final response = await PostClientApi().getposts();
+        final List<Post> posts = List<Post>.from(response.items
+            .map((item) => tomap(item))
+            .map((mapitem) => Post.fromJson(mapitem)));
+        yield PostsLoaded(
+            posts: posts,
+            page: response.page,
+            pages: response.pages,
+            perPage: response.perPage,
+            total: response.total,
+            hasReachedMax: response.items.isEmpty ? true : false);
+        return;
+      } catch (_) {
+        yield state;
       }
     }
   }
