@@ -7,7 +7,7 @@ class PostClientApi {
   PostsClient stub;
 
   PostClientApi() {
-    channel = ClientChannel('10.41.62.80',
+    channel = ClientChannel('172.20.10.8',
         port: 50052,
         options:
             const ChannelOptions(credentials: ChannelCredentials.insecure()));
@@ -28,7 +28,7 @@ class PostClientApi {
     print('input args:host:$host,port:$port,page:$page,perPage:$perPage');
     try {
       final request = PostsRequest()
-        ..host = host ?? '10.41.62.80'
+        ..host = host ?? '172.20.10.8'
         ..port = port ?? 8000
         ..page = page ?? 1
         ..perPage = perPage ?? 20;

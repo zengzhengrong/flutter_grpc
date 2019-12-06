@@ -1,7 +1,5 @@
 import 'dart:convert' show json;
-import 'dart:io';
 import 'package:equatable/equatable.dart';
-import 'data.dart' show jsonString;
 
 class Post extends Equatable {
   final int id;
@@ -32,22 +30,6 @@ class Post extends Equatable {
   String toString() => 'Post { id: $id title: $title}';
 }
 
-List<Post> generatePosts() {
-  
-  /*Flutter do not Identifying path
-  String jsonPath = path.join(Directory.current.path + '/lib/models/posts.json');
-  String jsonString = File(jsonPath).readAsStringSync();*/
-  // final List<Post> posts = List<Post>();
-  // dynamic data = json.decode(jsonString);
-  // for (Map<String, dynamic> item in data['items']){
-  //   Post post = Post.fromJson(item);
-  //   posts.add(post);
-  // }
-  final List<Post> posts = List<Post>.from(
-    json.decode(jsonString)['items'].map((item) => Post.fromJson(item)));
-  return posts;
-}
-
 Map<String,String> datetimeFormat(String datetime){
   if (datetime == 'null'){
     final Map<String,String> datetimeMap = {'date':'null',
@@ -60,17 +42,4 @@ Map<String,String> datetimeFormat(String datetime){
   final Map<String,String> datetimeMap = {'date':dataTimeSplit[0]?? 'null',
   'time':dataTimeSplit[1]?? 'null'};
   return datetimeMap;
-}
-
-// main(List<String> args) {
-//   generatePosts();
-// }
-
-main(List<String> args) async {
-  // get machine ip
-  for (var interface in await NetworkInterface.list()) {
-    for (var addr in interface.addresses) {
-      print('${addr.address}');
-    }
-  }
 }

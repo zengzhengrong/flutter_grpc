@@ -30,6 +30,7 @@ class PostsBloc extends Bloc<PostsEvent, PostsState> {
       if (currentState is InitialPostsState) {
         try {
           final response = await PostClientApi().getposts();
+
           final List<Post> posts = List<Post>.from(response.items
               .map((item) => tomap(item))
               .map((mapitem) => Post.fromJson(mapitem)));
@@ -48,7 +49,7 @@ class PostsBloc extends Bloc<PostsEvent, PostsState> {
       }
       if (currentState is PostsLoaded) {
         try {
-          print('当前页：${currentState.page}');
+          print('current page : ${currentState.page}');
           final response =
               await PostClientApi().getposts(page: currentState.page + 1);
           final List<Post> posts = List<Post>.from(response.items
@@ -76,6 +77,7 @@ class PostsBloc extends Bloc<PostsEvent, PostsState> {
         final List<Post> posts = List<Post>.from(response.items
             .map((item) => tomap(item))
             .map((mapitem) => Post.fromJson(mapitem)));
+        yield InitialPostsState();
         yield PostsLoaded(
             posts: posts,
             page: response.page,
@@ -85,6 +87,7 @@ class PostsBloc extends Bloc<PostsEvent, PostsState> {
             hasReachedMax: response.items.isEmpty ? true : false);
         return;
       } catch (_) {
+        print(_);
         yield state;
       }
     }

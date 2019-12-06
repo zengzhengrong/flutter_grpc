@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:post_list/posts_bloc/bloc.dart';
@@ -23,7 +22,7 @@ class MyApp extends StatelessWidget {
       home: Scaffold(
           appBar: AppBar(title: Text('Posts')),
           body: BlocProvider(
-              builder: (context) => PostsBloc()..add(GetPostsEvent()),
+              create: (context) => PostsBloc()..add(GetPostsEvent()),
               child: MyHomePage())),
     );
   }
@@ -70,9 +69,9 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return BlocListener<PostsBloc, PostsState>(
       listener: (context, state) {
-        if (state is PostsLoaded) {
-        _refreshCompleter?.complete();
-        _refreshCompleter = Completer();
+        if (state is PostsLoaded || state is InitialPostsState) {
+          _refreshCompleter?.complete();
+          _refreshCompleter = Completer<void>();
         }
       },
       child: BlocBuilder<PostsBloc, PostsState>(
