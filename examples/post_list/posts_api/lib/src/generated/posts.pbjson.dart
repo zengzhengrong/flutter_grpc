@@ -12,7 +12,18 @@ const PostsRequest$json = const {
     const {'1': 'port', '3': 2, '4': 1, '5': 5, '10': 'port'},
     const {'1': 'page', '3': 3, '4': 1, '5': 5, '10': 'page'},
     const {'1': 'per_page', '3': 4, '4': 1, '5': 5, '10': 'perPage'},
+    const {'1': 'kwargs', '3': 5, '4': 3, '5': 11, '6': '.posts.PostsRequest.KwargsEntry', '10': 'kwargs'},
   ],
+  '3': const [PostsRequest_KwargsEntry$json],
+};
+
+const PostsRequest_KwargsEntry$json = const {
+  '1': 'KwargsEntry',
+  '2': const [
+    const {'1': 'key', '3': 1, '4': 1, '5': 9, '10': 'key'},
+    const {'1': 'value', '3': 2, '4': 1, '5': 9, '10': 'value'},
+  ],
+  '7': const {'7': true},
 };
 
 const PostsResponse$json = const {

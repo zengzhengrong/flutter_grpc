@@ -9,8 +9,11 @@ import 'package:posts_api/src/generated/google/protobuf/wrappers.pb.dart';
 class PostsService extends PostsServiceBase {
   @override
   Future<PostsResponse> getPosts(ServiceCall call, PostsRequest request) async {
+    final DateTime now = DateTime.now();
+    final String nowToString = '${now.year}-${now.month}-${now.day}-${now.hour}-${now.minute}-${now.second}';
+    final String lt_datetime = request.kwargs.containsKey('lt_datetime') ? request.kwargs['lt_datetime'] : nowToString;
     final String apiUrl =
-        'http://${request.host}:${request.port}/post/?page=${request.page}&per_page=${request.perPage}';
+        'http://${request.host}:${request.port}/post/?page=${request.page}&per_page=${request.perPage}&lt_datetime=${lt_datetime}';
     print('request:$apiUrl');
     var apiresponse = await http.get(apiUrl);
     final dynamic data = json.decode(apiresponse.body);

@@ -7,7 +7,7 @@ class PostClientApi {
   PostsClient stub;
 
   PostClientApi() {
-    channel = ClientChannel('172.20.10.8',
+    channel = ClientChannel('10.41.62.80',
         port: 50052,
         options:
             const ChannelOptions(credentials: ChannelCredentials.insecure()));
@@ -24,16 +24,20 @@ class PostClientApi {
   }
 
   Future<PostsResponse> getposts(
-      {String host, int port, int page, int perPage}) async {
+      {String host, int port, int page, int perPage,String ltDatetime}) async {
     print('input args:host:$host,port:$port,page:$page,perPage:$perPage');
     try {
+      final DateTime now = DateTime.now();
+      final String nowToString = '${now.year}-${now.month}-${now.day}-${now.hour}-${now.minute}-${now.second}';
       final request = PostsRequest()
-        ..host = host ?? '172.20.10.8'
+        ..host = host ?? '10.41.62.80'
         ..port = port ?? 8000
         ..page = page ?? 1
-        ..perPage = perPage ?? 20;
+        ..perPage = perPage ?? 20
+        ..kwargs['lt_datetime'] = ltDatetime ?? nowToString;
+
       print(
-          'request args:host:${request.host},port:${request.port},page:${request.page},perPage:${request.perPage}');
+          'request args:host:${request.host},port:${request.port},page:${request.page},perPage:${request.perPage},lt_datetime:${request.kwargs['lt_datetime']}');
       final response = await stub.getPosts(request);
       await channel.shutdown();
       // print('Post client received: ${response.items}');

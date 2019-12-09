@@ -4,10 +4,25 @@ import 'package:post_list/models/models.dart';
 import 'package:posts_api/posts_api.dart';
 import 'package:rxdart/rxdart.dart';
 import './bloc.dart';
+import 'package:timezone/standalone.dart';
+import 'package:timezone/data/latest.dart';
 
 class PostsBloc extends Bloc<PostsEvent, PostsState> {
+  final String locationTimeZone;
+  TZDateTime now;
+  PostsBloc({this.locationTimeZone});
+  int total;
+  // query by dateime now for initial State
+  Future<void> setupNow() async {
+    initializeTimeZones();
+    final detroit = getLocation(locationTimeZone);
+    final now = new TZDateTime.now(detroit);
+    this.now = now;
+  }
+
   @override
   PostsState get initialState => InitialPostsState();
+
   @override
   Stream<PostsState> transformEvents(
     Stream<PostsEvent> events,
@@ -25,12 +40,17 @@ class PostsBloc extends Bloc<PostsEvent, PostsState> {
   Stream<PostsState> mapEventToState(
     PostsEvent event,
   ) async* {
+    await setupNow();
     final currentState = state;
     if (event is GetPostsEvent && !_hasReachedMax(currentState)) {
       if (currentState is InitialPostsState) {
         try {
-          final response = await PostClientApi().getposts();
-
+          final String nowToString =
+              '${now.year}-${now.month}-${now.day}-${now.hour}-${now.minute}-${now.second}';
+          final response =
+              await PostClientApi().getposts(ltDatetime: nowToString);
+          // init total to Bloc instance
+          this.total = response.total;
           final List<Post> posts = List<Post>.from(response.items
               .map((item) => tomap(item))
               .map((mapitem) => Post.fromJson(mapitem)));
@@ -50,8 +70,10 @@ class PostsBloc extends Bloc<PostsEvent, PostsState> {
       if (currentState is PostsLoaded) {
         try {
           print('current page : ${currentState.page}');
-          final response =
-              await PostClientApi().getposts(page: currentState.page + 1);
+          final String preNow =
+              '${now.year}-${now.month}-${now.day}-${now.hour}-${now.minute}-${now.second}';
+          final response = await PostClientApi()
+              .getposts(page: currentState.page + 1, ltDatetime: preNow);
           final List<Post> posts = List<Post>.from(response.items
               .map((item) => tomap(item))
               .map((mapitem) => Post.fromJson(mapitem)));
@@ -73,11 +95,15 @@ class PostsBloc extends Bloc<PostsEvent, PostsState> {
     }
     if (event is RefreshPosts) {
       try {
-        final response = await PostClientApi().getposts();
+        await setupNow();
+        final String refreshNow =
+            '${now.year}-${now.month}-${now.day}-${now.hour}-${now.minute}-${now.second}';
+        final response = await PostClientApi().getposts(ltDatetime: refreshNow);
         final List<Post> posts = List<Post>.from(response.items
             .map((item) => tomap(item))
             .map((mapitem) => Post.fromJson(mapitem)));
-        yield InitialPostsState();
+        yield PostsRefreshed(
+            newPostCount: newPostCountUpdate(this.total, response.total));
         yield PostsLoaded(
             posts: posts,
             page: response.page,
@@ -85,7 +111,8 @@ class PostsBloc extends Bloc<PostsEvent, PostsState> {
             perPage: response.perPage,
             total: response.total,
             hasReachedMax: response.items.isEmpty ? true : false);
-        return;
+
+        // return;
       } catch (_) {
         print(_);
         yield state;
@@ -95,7 +122,12 @@ class PostsBloc extends Bloc<PostsEvent, PostsState> {
 
   bool _hasReachedMax(PostsState state) =>
       state is PostsLoaded && state.hasReachedMax;
-
+  int newPostCountUpdate(int preTotal, int currentTotal) {
+    final int count = currentTotal - preTotal;
+    this.total = currentTotal;
+    return count;
+  }
+      
   Map<String, dynamic> tomap(PostsResponse_Post post) {
     final Map<String, dynamic> data = {};
     data['id'] = post.id;

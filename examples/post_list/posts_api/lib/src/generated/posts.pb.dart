@@ -17,6 +17,7 @@ class PostsRequest extends $pb.GeneratedMessage {
     ..a<$core.int>(2, 'port', $pb.PbFieldType.O3)
     ..a<$core.int>(3, 'page', $pb.PbFieldType.O3)
     ..a<$core.int>(4, 'perPage', $pb.PbFieldType.O3)
+    ..m<$core.String, $core.String>(5, 'kwargs', entryClassName: 'PostsRequest.KwargsEntry', keyFieldType: $pb.PbFieldType.OS, valueFieldType: $pb.PbFieldType.OS, packageName: const $pb.PackageName('posts'))
     ..hasRequiredFields = false
   ;
 
@@ -70,6 +71,9 @@ class PostsRequest extends $pb.GeneratedMessage {
   $core.bool hasPerPage() => $_has(3);
   @$pb.TagNumber(4)
   void clearPerPage() => clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.Map<$core.String, $core.String> get kwargs => $_getMap(4);
 }
 
 class PostsResponse_Post extends $pb.GeneratedMessage {

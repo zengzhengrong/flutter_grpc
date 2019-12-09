@@ -12,6 +12,7 @@ message PostsRequest {
   int32 port = 2;
   int32 page = 3;
   int32 per_page = 4;
+  map<string, string> kwargs = 5;
 }
 
 message PostsResponse {

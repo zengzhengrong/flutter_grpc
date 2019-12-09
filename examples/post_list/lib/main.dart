@@ -22,7 +22,8 @@ class MyApp extends StatelessWidget {
       home: Scaffold(
           appBar: AppBar(title: Text('Posts')),
           body: BlocProvider(
-              create: (context) => PostsBloc()..add(GetPostsEvent()),
+              create: (context) => PostsBloc(locationTimeZone: 'Asia/Shanghai')
+                ..add(GetPostsEvent()),
               child: MyHomePage())),
     );
   }
@@ -69,9 +70,15 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return BlocListener<PostsBloc, PostsState>(
       listener: (context, state) {
-        if (state is PostsLoaded || state is InitialPostsState) {
+        if (state is PostsRefreshed) {
           _refreshCompleter?.complete();
           _refreshCompleter = Completer<void>();
+          Scaffold.of(context).showSnackBar(
+            SnackBar(
+              content: state.newPostCount !=0 ? Text('${state.newPostCount} Updated Success !~') : Text('No Post Updated !~'),
+              backgroundColor: state.newPostCount !=0 ? Colors.green[400] : Colors.blue,
+            ),
+          );
         }
       },
       child: BlocBuilder<PostsBloc, PostsState>(
