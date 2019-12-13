@@ -10,6 +10,8 @@ Flutter with grpc tutorial ~!
 
 ## Examples
 
+[Examples rendering](https://github.com/zengzhengrong/flutter_grpc/tree/master/gif/)
+
 <div style="text-align: center">
     <table>
         <tr>
