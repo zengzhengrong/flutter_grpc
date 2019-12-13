@@ -7,7 +7,7 @@ class CounterClientApi {
   CounterClient stub;
 
   CounterClientApi() {
-    channel = ClientChannel('localhost',port: 50051,
+    channel = ClientChannel('47.106.195.247',port: 5005,
         options:
             const ChannelOptions(credentials: ChannelCredentials.insecure()));
     stub = CounterClient(channel);
