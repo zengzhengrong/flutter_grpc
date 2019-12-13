@@ -7,7 +7,7 @@ class PostClientApi {
   PostsClient stub;
 
   PostClientApi() {
-    channel = ClientChannel('10.41.62.80',
+    channel = ClientChannel('192.168.1.235',
         port: 50052,
         options:
             const ChannelOptions(credentials: ChannelCredentials.insecure()));
@@ -30,7 +30,7 @@ class PostClientApi {
       final DateTime now = DateTime.now();
       final String nowToString = '${now.year}-${now.month}-${now.day}-${now.hour}-${now.minute}-${now.second}';
       final request = PostsRequest()
-        ..host = host ?? '10.41.62.80'
+        ..host = host ?? '192.168.1.235'
         ..port = port ?? 8000
         ..page = page ?? 1
         ..perPage = perPage ?? 20
