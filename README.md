@@ -15,7 +15,7 @@ Flutter with grpc tutorial ~!
         <tr>
             <td style="text-align: center">
                 <a href="https://github.com/zengzhengrong/flutter_grpc/tree/master/examples/counter">
-                    <img src="https://github.com/zengzhengrong/flutter_grpc/tree/master/gif/counter.gif" width="200"/>
+                    <img src="https://github.com/zengzhengrong/flutter_grpc/tree/master/gif/counter_mini.gif" width="200"/>
                 </a>
             </td>            
             <td style="text-align: center">
