@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "io.grpc.examples.keycloak";
+option java_outer_classname = "KeycloakProto";
+
+package keycloak;
+
+import "google/protobuf/empty.proto";
+
+// The keycloak with grpc service definition.
+service KeycloakService {
+  // Public & Secured
+  rpc Public (google.protobuf.Empty) returns (Reply) {}
+  rpc Secured (google.protobuf.Empty) returns (Reply) {}
+}
+
+// The response message
+message Reply {
+  int32 statuscode = 1;
+  string message = 2;
+}

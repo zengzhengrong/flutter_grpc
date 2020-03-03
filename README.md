@@ -82,3 +82,31 @@ port : 5001
 
 This example is service call service (rpc call rest api)  
 Modify TZ(Timezone) in Dockfile of flask-restplus-blog-api repo 
+
+
+## keycloak
+
+secure your api & oauth2
+
+- AIP repo (keycloak_go)[https://github.com/zengzhengrong/keycloak_go]
+
+Make sure  you install keycloak and API(keycloak_go) wokring as good as well
+
+config oatuh2   
+oauth2_repository/lib/src/oauth2_repository.dart
+```
+ final Uri tokenEndpoint = Uri.parse(
+      "http://keycloak-ingress-l7-http.keycloak.192.168.1.203.xip.io/auth/realms/demo/protocol/openid-connect/token");
+  final String userinfoEndpoint =
+      "http://keycloak-ingress-l7-http.keycloak.192.168.1.203.xip.io/auth/realms/demo/protocol/openid-connect/userinfo";
+    ...
+    ...
+```
+Setting your keycloak tokenEndpoint and userinfoEndpoint
+
+config api client api_repositry/lib/src/client.dart
+```
+    channel = ClientChannel('192.168.1.235',
+        port: 8000,
+```
+setting your api hostname or IP
