@@ -88,7 +88,7 @@ Modify TZ(Timezone) in Dockfile of flask-restplus-blog-api repo
 
 secure your api & oauth2
 
-- AIP repo (keycloak_go)[https://github.com/zengzhengrong/keycloak_go]
+- AIP repo [keycloak_go](https://github.com/zengzhengrong/keycloak_go)
 
 Make sure  you install keycloak and API(keycloak_go) wokring as good as well
 
